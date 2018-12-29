@@ -63,7 +63,35 @@ class Recursion
             } else {
                 binary_search_helper(arr, key, mid+1, high);
             }
+        } else {
+            cout << "not found" <<endl;
         }
+    }
+
+    void targetSum_helper(int a[], int pos, int diff_so_far, vector<bool> &b_arr) {
+//diff_so_far == 0 ||
+        
+        if (diff_so_far==0) {
+            //for the array length print whatever is true in bool array
+            for(int i=0; i<pos; i++) {
+                if(b_arr[i]) {
+                    cout << a[i] << " ";
+                }
+            } cout << endl;
+            return;
+        } else if(pos == b_arr.size()|| diff_so_far <0) {
+            return;
+        }
+        
+        b_arr[pos] = true;
+        diff_so_far -= a[pos];
+        targetSum_helper(a, pos+1, diff_so_far, b_arr);
+        
+        b_arr[pos] = false;
+        diff_so_far += a[pos];
+        // cout << diff_so_far << endl;
+        // return;
+        targetSum_helper(a, pos+1, diff_so_far, b_arr);
     }
 
     public:
@@ -84,6 +112,16 @@ class Recursion
         void binary_search(int arr[], int key, int length) {
             binary_search_helper(arr, key, 0, length-1);
         }
+
+        void targetSum(int a[], int sum, int arr_size) {
+            //cout << sum << endl;
+            if(sum ==0) {
+                cout << "nothing to find" << endl;
+                return;
+            }
+            vector<bool> bool_arr(arr_size,false);
+            targetSum_helper(a, 0, sum, bool_arr);
+        }
 };
 
 int main()
@@ -91,10 +129,13 @@ int main()
     // Recursion permute;
     Recursion subset;
     //string a = {'b','c','e','f','g','h'};
-    string a = "bcef";
+    //string a = "bcef";
     //subset.subset(a);
     int arr[6] = {20, 30, 40, 50, 60, 70};
-    subset.binary_search(arr, 30, 6);
+    // int b[3] = {10}
+    // subset.binary_search(arr, 90, 6);
+
     // permute.permute(a);
+    subset.targetSum(arr,300, 6);
     return 0;
 }
