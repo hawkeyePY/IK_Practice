@@ -33,36 +33,47 @@ public:
 		}
 		cout << endl;
 	}
-
-	// bool detectCycleHelper(Vertex* v, unordered_map<int, bool>& visited, int parent) {
-	// 	visited[v->getVal()] = true;
-
-	// 	return true;
-	// }
-
+	Vertex* getVertex() {
+		return this;
+	}
 };
 
-
-	bool detectCycle(list<Vertex*> vlist) {
-		//for all vertices in list do a dfs
-		// unordered_map<int, bool> visited(vlist.size(), false);	
-
-		for(int i=0; i<vlist.size(); i++) {
-			cout << i<< endl;
-
-			Vertex* v = vlist.front();
+bool detectCycleHelper(Vertex* v, unordered_map<int, int>& visited, int parent) {
+	visited[v->getVal()] = 1;
+	cout << v->getVal() << endl;
+	vector<Vertex*> adjList = v->getadjList();
+	for(int i=0; i< adjList.size();i++) {
+		if(!visited[v->getVal()]) {	
 			cout << v->getVal() <<endl;
-			break;
-			// if(!visited[vlist[i]->getVal()]) {
-			// 	if(detectCycleHelper(vlist[i]), visited, -1) {
-			// 		return true;
-			// 	}
-			// }
-			vlist.pop_front();
+			if(detectCycleHelper(adjList[i], visited, adjList[i]->getVal())) {
+				return true;
+			} else if(parent != adjList[i]->getVal()) {
+				return true;
+			}
 		}
-		return false;
-
 	}
+	return false;
+}
+
+bool detectCycle(list<Vertex*> vlist) {
+	//for all vertices in list do a dfs
+	unordered_map<int, int> visited(vlist.size());	
+
+	for(auto ver: vlist) {
+		//cout << i<< endl;
+
+		// Vertex* v = vlist.front();
+		if (!visited[ver->getVal()]) {
+			if(detectCycleHelper(ver, visited, -1)) {
+				return true;
+			}	
+		}
+		
+		// vlist.pop_front();
+	}
+	return false;
+
+}
 
 int main()  {
 
